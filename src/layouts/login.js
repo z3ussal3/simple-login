@@ -18,7 +18,7 @@ const LoginApp = ({ history, form, client }) => {
             if (!err) {
                 console.log('Received values of form: ', username + " " + password);
                 try {
-                    const { data } = await client.query({
+                    const data = await client.query({
                         query: QUERY_USER,
                         variables: {
                             username: username,
@@ -26,17 +26,21 @@ const LoginApp = ({ history, form, client }) => {
                         }
                     });
 
-                    notification.success({
-                        message: 'Welcome to Mobile Legend',
-                        description: 'Good job',
-                    });
+                    if (data.data.Users.length == 1) {
+                        notification.success({
+                            message: 'Welcome to Mobile Legend',
+                            description: 'Good job',
+                        });
 
-                    await history.push('/login');
+                        await history.push('/dashboard');
+                    } else {
+                        notification.error({
+                            message: 'Invalid username and password!',
+                            description: 'Bad job',
+                        });
+                    }
                 } catch (e) {
-                    notification.error({
-                        message: 'Oh no!!!',
-                        description: 'Bad job',
-                    });
+
                 }
             }
         });
