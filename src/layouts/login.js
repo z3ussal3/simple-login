@@ -1,30 +1,37 @@
 import React, { useState } from "react";
 import { Form, Icon, Input, Row, Col, Button, notification } from 'antd';
-import { withApollo } from 'react-apollo';
+import { withApollo, Query } from 'react-apollo';
 import './login.css';
-import { Link, Redirect, withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 
-// import { SUBSCRIPTIONS_USERS } from '../graphql/subscriptions/getUsers';
+import { QUERY_USER } from '../graphql/queries/todo';
 
 const { Item } = Form;
 
-const LoginApp = ({ children, form }) => {
+const LoginApp = ({ history, form, client }) => {
     const { getFieldDecorator } = form;
+    const { test, newTest } = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault();
-        form.validateFields((err, { username, password }) => {
+        form.validateFields(async (err, { username, password }) => {
             if (!err) {
                 console.log('Received values of form: ', username + " " + password);
                 try {
+                    const { data } = await client.query({
+                        query: QUERY_USER,
+                        variables: {
+                            username: username,
+                            password: password
+                        }
+                    });
 
                     notification.success({
-                        message: 'Done logging in',
+                        message: 'Welcome to Mobile Legend',
                         description: 'Good job',
                     });
 
-                    // return await withRouter(<Redirect to='/dashboard' />)
-                    // this.props.history.push('/');
+                    await history.push('/login');
                 } catch (e) {
                     notification.error({
                         message: 'Oh no!!!',
@@ -98,5 +105,6 @@ const LoginApp = ({ children, form }) => {
 
 export default compose(
     withApollo,
+    withRouter,
     Form.create({ name: 'login_app' })
 )(LoginApp);

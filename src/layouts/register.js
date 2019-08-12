@@ -9,10 +9,8 @@ import {
 } from 'antd';
 import { withApollo } from 'react-apollo';
 import './login.css';
-import { Link, Redirect, withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
-
-import client from '../lib/apollo';
 
 import { MUTATION_REGISTER_USER } from '../graphql/mutations/todo';
 
@@ -92,7 +90,6 @@ const RegisterApp = ({ history, form, client }) => {
                     });
 
                     await history.push('/login');
-
                 } catch (e) {
                     notification.error({
                         message: 'Oh no!!!',
