@@ -18,7 +18,7 @@ import { MUTATION_REGISTER_USER } from '../graphql/mutations/todo';
 
 const { Item } = Form;
 
-const RegisterApp = ({ form }) => {
+const RegisterApp = ({ history, form, client }) => {
     const { getFieldDecorator } = form;
 
     const formItemLayout = {
@@ -91,8 +91,8 @@ const RegisterApp = ({ form }) => {
                         description: 'Good job',
                     });
 
-                    // return await withRouter(<Redirect to='/dashboard' />)
-                    // this.props.history.push('/');
+                    await history.push('/login');
+
                 } catch (e) {
                     notification.error({
                         message: 'Oh no!!!',
@@ -168,5 +168,6 @@ const RegisterApp = ({ form }) => {
 
 export default compose(
     withApollo,
+    withRouter,
     Form.create({ name: 'register_app' })
 )(RegisterApp);
